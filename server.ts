@@ -82,5 +82,5 @@ app.get("/api/getAllLocations", async (req: Request, res: Response) => {
 });
 
 /*app.listen(5000, () => {
-    console.log("server running");
+    console.log("server  running");
 });*/

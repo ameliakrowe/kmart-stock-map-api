@@ -8,7 +8,7 @@ const port = process.env.PORT || 8080;
 
 app.use(
   cors({
-    origin: ["http://localhost:3005", "https://kmart-stock-map.vercel.app/"],
+    origin: "*",
     methods: "GET,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 200,

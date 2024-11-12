@@ -25,6 +25,7 @@ app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 app.get("/ping", (_req: Request, res: Response) => {
   return res.send("pong 🏓");
 });*/
+module.exports = app;
 app.listen(port, () => {
     return console.log(`Server is listening on ${port}`);
 });

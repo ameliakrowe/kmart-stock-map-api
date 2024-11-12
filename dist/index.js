@@ -13,10 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const getPostcodeSuggestions_1 = require("./getPostcodeSuggestions");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
-app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).json({ message: "Hi!" });
+app.get("/api/getPostcodeSuggestions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = req.query.query;
+    try {
+        const result = yield (0, getPostcodeSuggestions_1.getPostcodeSuggestions)(query);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        const axiosError = error;
+        res.status(500).json({
+            message: axiosError.message,
+        });
+    }
 }));
 /*app.get("/", (_req: Request, res: Response) => {
   return res.send("Express Typescript on Vercel");

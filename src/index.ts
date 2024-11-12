@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { getPostcodeSuggestions } from "./getPostcodeSuggestions";
 import { AxiosError } from "axios";
+import { getAllLocations } from "./getAllLocations";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -14,6 +15,18 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+app.get("/api/getAllLocations", async (req: Request, res: Response) => {
+  try {
+    const result = await getAllLocations();
+    res.status(200).json(result);
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    res.status(500).json({
+      message: axiosError.message,
+    });
+  }
+});
 
 app.get("/api/getPostcodeSuggestions", async (req: Request, res: Response) => {
   const query = req.query.query as string;

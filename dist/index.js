@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const getPostcodeSuggestions_1 = require("./getPostcodeSuggestions");
+const getAllLocations_1 = require("./getAllLocations");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use((0, cors_1.default)({
@@ -22,6 +23,18 @@ app.use((0, cors_1.default)({
     methods: "GET,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 200,
+}));
+app.get("/api/getAllLocations", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield (0, getAllLocations_1.getAllLocations)();
+        res.status(200).json(result);
+    }
+    catch (error) {
+        const axiosError = error;
+        res.status(500).json({
+            message: axiosError.message,
+        });
+    }
 }));
 app.get("/api/getPostcodeSuggestions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = req.query.query;

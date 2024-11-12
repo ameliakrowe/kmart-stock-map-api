@@ -3,6 +3,7 @@ import cors from "cors";
 import { getPostcodeSuggestions } from "./getPostcodeSuggestions";
 import { AxiosError } from "axios";
 import { getAllLocations } from "./getAllLocations";
+import { getProductAvailability } from "./getProductAvailability";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -15,6 +16,30 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+app.get("/api/getProductAvailability", async (req: Request, res: Response) => {
+  const productSKU = req.query.productSKU as string;
+  const postcode = req.query.postcode as string;
+  const lat = req.query.lat as string;
+  const lon = req.query.lon as string;
+  const searchRadius = Number(req.query.searchRadius as string);
+
+  try {
+    const result = await getProductAvailability(
+      productSKU,
+      postcode,
+      lat,
+      lon,
+      searchRadius
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    res.status(500).json({
+      message: axiosError.message,
+    });
+  }
+});
 
 app.get("/api/getAllLocations", async (req: Request, res: Response) => {
   try {

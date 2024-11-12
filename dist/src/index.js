@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const getPostcodeSuggestions_1 = require("./getPostcodeSuggestions");
 const getAllLocations_1 = require("./getAllLocations");
+const getProductAvailability_1 = require("./getProductAvailability");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use((0, cors_1.default)({
@@ -23,6 +24,23 @@ app.use((0, cors_1.default)({
     methods: "GET,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 200,
+}));
+app.get("/api/getProductAvailability", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productSKU = req.query.productSKU;
+    const postcode = req.query.postcode;
+    const lat = req.query.lat;
+    const lon = req.query.lon;
+    const searchRadius = Number(req.query.searchRadius);
+    try {
+        const result = yield (0, getProductAvailability_1.getProductAvailability)(productSKU, postcode, lat, lon, searchRadius);
+        res.status(200).json(result);
+    }
+    catch (error) {
+        const axiosError = error;
+        res.status(500).json({
+            message: axiosError.message,
+        });
+    }
 }));
 app.get("/api/getAllLocations", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

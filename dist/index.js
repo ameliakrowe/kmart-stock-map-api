@@ -19,6 +19,9 @@ const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use((0, cors_1.default)({
     origin: ["http://localhost:3005", "https://kmart-stock-map.vercel.app/"],
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type,Authorization",
+    optionsSuccessStatus: 200,
 }));
 app.get("/api/getPostcodeSuggestions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = req.query.query;

@@ -40,7 +40,7 @@ const axios_1 = __importDefault(require("axios"));
 const geolib_1 = require("geolib");
 const locationData = __importStar(require("../locations.json"));
 const constants_1 = require("./constants");
-const allLocations = locationData;
+const allLocations = locationData.locations;
 function getFullLocationsFromCnCResponseLocations(locations) {
     const result = [];
     locations.forEach((location) => {
@@ -124,6 +124,7 @@ function getProductAvailability(productSKU, postcode, lat, lon, searchRadius) {
             });
             return oldResults;
         }
+        console.log("start");
         const locationsWithinRadius = getLocationsWithinRadius(lat, lon, searchRadius);
         let locationsToSearchClickAndCollect = locationsWithinRadius.map((location) => ({
             locationId: location.locationId,
@@ -137,6 +138,7 @@ function getProductAvailability(productSKU, postcode, lat, lon, searchRadius) {
         }));
         let clickAndCollectSearchResults = [];
         let inStoreSearchResults = [];
+        console.log(locationsToSearchClickAndCollect);
         while (locationsToSearchClickAndCollect.length > 0) {
             try {
                 const locationToSearch = locationsToSearchClickAndCollect[0];

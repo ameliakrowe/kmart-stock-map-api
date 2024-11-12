@@ -15,7 +15,7 @@ import {
 import { InStoreVariables } from "./types/InStoreVariables";
 import { AxiosError } from "axios";
 
-const allLocations = locationData as NearestLocation[];
+const allLocations = locationData.locations as NearestLocation[];
 
 function getFullLocationsFromCnCResponseLocations(
   locations: ClickAndCollectResponseLocation[]
@@ -157,6 +157,8 @@ export async function getProductAvailability(
     return oldResults;
   }
 
+  console.log("start");
+
   const locationsWithinRadius = getLocationsWithinRadius(
     lat,
     lon,
@@ -181,6 +183,8 @@ export async function getProductAvailability(
   let clickAndCollectSearchResults: ClickAndCollectResponseLocation[] = [];
 
   let inStoreSearchResults: InStoreResponseLocation[] = [];
+
+  console.log(locationsToSearchClickAndCollect);
 
   while (locationsToSearchClickAndCollect.length > 0) {
     try {

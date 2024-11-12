@@ -1,9 +1,16 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { getPostcodeSuggestions } from "./getPostcodeSuggestions";
 import { AxiosError } from "axios";
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+app.use(
+  cors({
+    origin: "http://localhost:3005",
+  })
+);
 
 app.get("/api/getPostcodeSuggestions", async (req: Request, res: Response) => {
   const query = req.query.query as string;

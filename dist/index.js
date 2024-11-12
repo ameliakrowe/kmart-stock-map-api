@@ -13,9 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const getPostcodeSuggestions_1 = require("./getPostcodeSuggestions");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
+app.use((0, cors_1.default)({
+    origin: "http://localhost:3005",
+}));
 app.get("/api/getPostcodeSuggestions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = req.query.query;
     try {

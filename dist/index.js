@@ -18,7 +18,7 @@ const getPostcodeSuggestions_1 = require("./getPostcodeSuggestions");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 app.use((0, cors_1.default)({
-    origin: "*",
+    origin: ["http://localhost:3005", "https://kmart-stock-map.vercel.app"],
     methods: "GET,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 200,

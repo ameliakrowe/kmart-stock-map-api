@@ -1653,13 +1653,6 @@
             "postcode": "3909"
         },
         {
-            "locationId": "1269",
-            "publicName": "Bairnsdale K Hub",
-            "latitude": "-37.824592000000003",
-            "longitude": "147.6272457",
-            "postcode": "3875"
-        },
-        {
             "locationId": "1321",
             "publicName": "Bairnsdale",
             "latitude": "-37.836153271989261",
@@ -1693,6 +1686,20 @@
             "latitude": "-37.757505999999999",
             "longitude": "145.31381299999998",
             "postcode": "3116"
+        },
+        {
+            "locationId": "1144",
+            "publicName": "Eastland",
+            "latitude": "-37.812468999999993",
+            "longitude": "145.22891200000001",
+            "postcode": "3134"
+        },
+        {
+            "locationId": "1016",
+            "publicName": "Boronia",
+            "latitude": "-37.860692123010303",
+            "longitude": "145.287365913391",
+            "postcode": "3155"
         },
         {
             "locationId": "1370",
@@ -1814,34 +1821,6 @@
             "postcode": "3108"
         },
         {
-            "locationId": "1144",
-            "publicName": "Eastland",
-            "latitude": "-37.812468999999993",
-            "longitude": "145.22891200000001",
-            "postcode": "3134"
-        },
-        {
-            "locationId": "1016",
-            "publicName": "Boronia",
-            "latitude": "-37.860692123010303",
-            "longitude": "145.287365913391",
-            "postcode": "3155"
-        },
-        {
-            "locationId": "1164",
-            "publicName": "Knox ",
-            "latitude": "-37.8693992551324",
-            "longitude": "145.24110317230199",
-            "postcode": "3152"
-        },
-        {
-            "locationId": "1001",
-            "publicName": "Burwood",
-            "latitude": "-37.853542696865297",
-            "longitude": "145.14977931976298",
-            "postcode": "3151"
-        },
-        {
             "locationId": "1111",
             "publicName": "Traralgon",
             "latitude": "-38.194029999999998",
@@ -1954,11 +1933,25 @@
             "postcode": "3124"
         },
         {
+            "locationId": "1164",
+            "publicName": "Knox ",
+            "latitude": "-37.8693992551324",
+            "longitude": "145.24110317230199",
+            "postcode": "3152"
+        },
+        {
             "locationId": "1136",
             "publicName": "Rowville",
             "latitude": "-37.920034000000001",
             "longitude": "145.237369",
             "postcode": "3178"
+        },
+        {
+            "locationId": "1001",
+            "publicName": "Burwood",
+            "latitude": "-37.853542696865297",
+            "longitude": "145.14977931976298",
+            "postcode": "3151"
         },
         {
             "locationId": "1212",
@@ -1989,18 +1982,11 @@
             "postcode": "3168"
         },
         {
-            "locationId": "1095",
-            "publicName": "Brandon Park",
-            "latitude": "-37.904751000000005",
-            "longitude": "145.16253799999998",
-            "postcode": "3170"
-        },
-        {
-            "locationId": "1026",
-            "publicName": "Keysborough",
-            "latitude": "-37.992783000000003",
-            "longitude": "145.173393",
-            "postcode": "3173"
+            "locationId": "1265",
+            "publicName": "Endeavour Hills",
+            "latitude": "-37.9769887",
+            "longitude": "145.25898819999998",
+            "postcode": "3802"
         },
         {
             "locationId": "1156",
@@ -2010,25 +1996,25 @@
             "postcode": "3175"
         },
         {
-            "locationId": "1222",
-            "publicName": "Carrum Downs",
-            "latitude": "-38.10223914898274",
-            "longitude": "145.18537303173832",
-            "postcode": "3201"
-        },
-        {
-            "locationId": "1265",
-            "publicName": "Endeavour Hills",
-            "latitude": "-37.9769887",
-            "longitude": "145.25898819999998",
-            "postcode": "3802"
-        },
-        {
             "locationId": "1053",
             "publicName": "Fountain Gate",
             "latitude": "-38.017635000000006",
             "longitude": "145.304024",
             "postcode": "3805"
+        },
+        {
+            "locationId": "1026",
+            "publicName": "Keysborough",
+            "latitude": "-37.992783000000003",
+            "longitude": "145.173393",
+            "postcode": "3173"
+        },
+        {
+            "locationId": "1222",
+            "publicName": "Carrum Downs",
+            "latitude": "-38.10223914898274",
+            "longitude": "145.18537303173832",
+            "postcode": "3201"
         },
         {
             "locationId": "1361",
@@ -2080,6 +2066,13 @@
             "postcode": "3995"
         },
         {
+            "locationId": "1080",
+            "publicName": "Burnie",
+            "latitude": "-41.051257999999997",
+            "longitude": "145.90496400000001",
+            "postcode": "7320"
+        },
+        {
             "locationId": "1040",
             "publicName": "Devonport",
             "latitude": "-41.177084000000001",
@@ -2094,11 +2087,11 @@
             "postcode": "7250"
         },
         {
-            "locationId": "1080",
-            "publicName": "Burnie",
-            "latitude": "-41.051257999999997",
-            "longitude": "145.90496400000001",
-            "postcode": "7320"
+            "locationId": "1009",
+            "publicName": "New Town",
+            "latitude": "-42.855811000000003",
+            "longitude": "147.30484000000001",
+            "postcode": "7008"
         },
         {
             "locationId": "1061",
@@ -2106,13 +2099,6 @@
             "latitude": "-42.866376000000002",
             "longitude": "147.36814100000001",
             "postcode": "7018"
-        },
-        {
-            "locationId": "1009",
-            "publicName": "New Town",
-            "latitude": "-42.855811000000003",
-            "longitude": "147.30484000000001",
-            "postcode": "7008"
         }
     ]
 }

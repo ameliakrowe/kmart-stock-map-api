@@ -20,7 +20,6 @@ async function binarySearchFromCoords(
 
   while (max - min > 10) {
     const guess = Math.floor((max - min) / 2 + min);
-    //console.log("min %d max %d guess %d", min, max, guess);
     try {
       const nearestLocationsResponse = await getNearestLocations(
         coord.lat.toString(),
@@ -29,7 +28,6 @@ async function binarySearchFromCoords(
       );
       counter += 1;
       const nearestLocations = nearestLocationsResponse.nearestLocations;
-      //console.log("Number of locations: %d", nearestLocationsResponse.nearestLocations.length);
       if (nearestLocationsResponse.nearestLocations.length < 10) {
         result = nearestLocations;
         min = guess;
@@ -37,9 +35,10 @@ async function binarySearchFromCoords(
         max = guess;
       }
     } catch {
-      console.log("Error fetching data from GraphQL API");
+      console.log(
+        "Probable rate limit hit on Kmart API. Trying again in 10 seconds"
+      );
       await delay(10000);
-      //throw new Error("Failed to fetch nearest location data");
     }
   }
   return {
@@ -60,11 +59,6 @@ function excludeCoordsToSearch(
         { latitude: centerCoord.lat, longitude: centerCoord.lon },
         { latitude: coord.coord.lat, longitude: coord.coord.lon }
       ) / 1000;
-
-    /*if (coord.coord.lat < -27.25 && coord.coord.lat > -27.75 && coord.coord.lon > 152.75 && coord.coord.lon < 153.25 && centerCoord.lat < -27.45
-            && centerCoord.lat > -27.55 && centerCoord.lon > 152.95 && centerCoord.lon < 153.05) {
-            console.log("%d %d distance from %d %d: %d", coord.coord.lat, coord.coord.lon, centerCoord.lat, centerCoord.lon, kmFromCenter);
-        }*/
     if (kmFromCenter <= radius - 9) {
       coord.needToSearch = false;
     }
@@ -108,23 +102,17 @@ export async function getAllLocations() {
       currentSearchCoord.lon = coordLimits.west;
       currentSearchCoord.lat -= 0.1;
     }
-    //console.log('%d S %d E', currentSearchCoord.lat, currentSearchCoord.lon);
   }
-  //console.log(searchCoords);
 
-  console.log(getNumberOfLocationsToSearch(searchCoords));
+  console.log(
+    "&d locations left to search",
+    getNumberOfLocationsToSearch(searchCoords)
+  );
 
   while (getNumberOfLocationsToSearch(searchCoords) > 0) {
-    //const fileName = Date.now().toString();
-    /*fs.writeFile(fileName, searchCoords.map((coord) => `${coord.coord.lat} ${coord.coord.lon} ${coord.needToSearch}`).join("\n"), (err: any) => {
-            if (err) {
-                console.error(err);
-            }
-        });*/
-
     const coordToSearch = searchCoords.filter((coord) => coord.needToSearch)[0];
     console.log(
-      "lat: %d lon: %d",
+      "Searching for lat: %d lon: %d",
       Math.round(coordToSearch.coord.lat * 10) / 10,
       Math.round(coordToSearch.coord.lon * 10) / 10
     );
@@ -152,11 +140,15 @@ export async function getAllLocations() {
     });
   }
 
+  const finalResult = {
+    locations: locations,
+  };
+
   const fs = require("fs");
 
   fs.writeFile(
     "locations.json",
-    JSON.stringify(locations, null, 4),
+    JSON.stringify(finalResult, null, 4),
     (err: any) => {
       if (err) {
         console.error(err);

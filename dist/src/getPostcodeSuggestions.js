@@ -50,7 +50,7 @@ function getPostcodeSuggestions(queryString) {
         }
         catch (error) {
             console.error("Error fetching data from GraphQL API:", error);
-            throw new Error("Failed to fetch postcode suggestions");
+            throw new Error("Something went wrong getting suggestions. Please try again.");
         }
     });
 }

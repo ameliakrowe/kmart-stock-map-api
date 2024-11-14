@@ -37,7 +37,7 @@ async function binarySearchFromCoords(
       } else {
         max = guess;
       }
-    } catch {
+    } catch (err) {
       if (!lastSearchFailed) {
         console.error(
           "Probable rate limit hit on Kmart API. Trying again in 10 seconds"
@@ -45,11 +45,14 @@ async function binarySearchFromCoords(
         lastSearchFailed = true;
         await delay(10000);
       } else {
-        throw new Error(
+        console.error(
           `Unexpected error fetching locations from Kmart API for lat ${
             Math.round(coord.lat * 10) / 10
-          } lon ${Math.round(coord.lon * 10) / 10}`
+          } lon ${
+            Math.round(coord.lon * 10) / 10
+          } at search distance ${guess}: ${err.message}`
         );
+        throw new Error("Could not fetch locations");
       }
     }
   }
@@ -152,7 +155,7 @@ export async function getAllLocations() {
         }
       });
     } catch (err) {
-      throw new Error("Could not fetch locations");
+      throw err;
     }
   }
 

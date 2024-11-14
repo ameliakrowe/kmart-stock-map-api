@@ -43,8 +43,7 @@ export async function getNearestLocations(
       : {
           nearestLocations: [],
         };
-  } catch (error) {
-    console.error("Error fetching data from GraphQL API:", error);
-    throw new Error("Failed to fetch data");
+  } catch (err) {
+    throw err;
   }
 }

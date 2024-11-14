@@ -37,14 +37,15 @@ function binarySearchFromCoords(coord) {
                     max = guess;
                 }
             }
-            catch (_a) {
+            catch (err) {
                 if (!lastSearchFailed) {
                     console.error("Probable rate limit hit on Kmart API. Trying again in 10 seconds");
                     lastSearchFailed = true;
                     yield delay(10000);
                 }
                 else {
-                    throw new Error(`Unexpected error fetching locations from Kmart API for lat ${Math.round(coord.lat * 10) / 10} lon ${Math.round(coord.lon * 10) / 10}`);
+                    console.error(`Unexpected error fetching locations from Kmart API for lat ${Math.round(coord.lat * 10) / 10} lon ${Math.round(coord.lon * 10) / 10} at search distance ${guess}: ${err.message}`);
+                    throw new Error("Could not fetch locations");
                 }
             }
         }
@@ -116,7 +117,7 @@ function getAllLocations() {
                 });
             }
             catch (err) {
-                throw new Error("Could not fetch locations");
+                throw err;
             }
         }
         const finalResult = {

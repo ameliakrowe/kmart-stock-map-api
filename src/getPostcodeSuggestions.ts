@@ -40,6 +40,6 @@ export async function getPostcodeSuggestions(queryString: string) {
     return response.data;
   } catch (error) {
     console.error("Error fetching data from GraphQL API:", error);
-    throw new Error("Failed to fetch data");
+    throw new Error("Failed to fetch postcode suggestions");
   }
 }

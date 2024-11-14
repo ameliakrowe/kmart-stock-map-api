@@ -27,12 +27,11 @@ app.use((0, cors_1.default)({
 }));
 app.get("/api/getProductAvailability", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const productSKU = req.query.productSKU;
-    const postcode = req.query.postcode;
     const lat = req.query.lat;
     const lon = req.query.lon;
     const searchRadius = Number(req.query.searchRadius);
     try {
-        const result = yield (0, getProductAvailability_1.getProductAvailability)(productSKU, postcode, lat, lon, searchRadius);
+        const result = yield (0, getProductAvailability_1.getProductAvailability)(productSKU, lat, lon, searchRadius);
         res.status(200).json(result);
     }
     catch (error) {

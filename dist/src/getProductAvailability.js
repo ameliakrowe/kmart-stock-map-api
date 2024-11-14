@@ -98,33 +98,32 @@ function generateInStoreVariables(postcode, productSKU) {
         },
     };
 }
-function getProductAvailability(productSKU, postcode, lat, lon, searchRadius) {
+function addNewResultsToClickAndCollectSearchResults(oldResults, newResults, locationsToInclude) {
+    newResults.forEach((newResult) => {
+        const existingMatchingLocations = oldResults.filter((existingResult) => newResult.location.locationId === existingResult.location.locationId);
+        if (existingMatchingLocations.length < 1 &&
+            locationsToInclude
+                .map((location) => location.locationId)
+                .includes(newResult.location.locationId)) {
+            oldResults.push(newResult);
+        }
+    });
+    return oldResults;
+}
+function addNewResultsToInStoreSearchResults(oldResults, newResults, locationsToInclude) {
+    newResults.forEach((newResult) => {
+        const existingMatchingLocations = oldResults.filter((existingResult) => newResult.locationId === existingResult.locationId);
+        if (existingMatchingLocations.length < 1 &&
+            locationsToInclude
+                .map((location) => location.locationId)
+                .includes(newResult.locationId.toString())) {
+            oldResults.push(newResult);
+        }
+    });
+    return oldResults;
+}
+function getProductAvailability(productSKU, lat, lon, searchRadius) {
     return __awaiter(this, void 0, void 0, function* () {
-        function addNewResultsToClickAndCollectSearchResults(oldResults, newResults, locationsToInclude) {
-            newResults.forEach((newResult) => {
-                const existingMatchingLocations = oldResults.filter((existingResult) => newResult.location.locationId === existingResult.location.locationId);
-                if (existingMatchingLocations.length < 1 &&
-                    locationsToInclude
-                        .map((location) => location.locationId)
-                        .includes(newResult.location.locationId)) {
-                    oldResults.push(newResult);
-                }
-            });
-            return oldResults;
-        }
-        function addNewResultsToInStoreSearchResults(oldResults, newResults, locationsToInclude) {
-            newResults.forEach((newResult) => {
-                const existingMatchingLocations = oldResults.filter((existingResult) => newResult.locationId === existingResult.locationId);
-                if (existingMatchingLocations.length < 1 &&
-                    locationsToInclude
-                        .map((location) => location.locationId)
-                        .includes(newResult.locationId.toString())) {
-                    oldResults.push(newResult);
-                }
-            });
-            return oldResults;
-        }
-        console.log("start");
         const locationsWithinRadius = getLocationsWithinRadius(lat, lon, searchRadius);
         let locationsToSearchClickAndCollect = locationsWithinRadius.map((location) => ({
             locationId: location.locationId,
@@ -138,35 +137,6 @@ function getProductAvailability(productSKU, postcode, lat, lon, searchRadius) {
         }));
         let clickAndCollectSearchResults = [];
         let inStoreSearchResults = [];
-        console.log(locationsToSearchClickAndCollect);
-        while (locationsToSearchClickAndCollect.length > 0) {
-            try {
-                const locationToSearch = locationsToSearchClickAndCollect[0];
-                console.log("searching c&c for store %s: %s, %s", locationToSearch.locationId, locationToSearch.publicName, locationToSearch.postcode);
-                const clickAndCollectResponse = yield axios_1.default.post(constants_1.KMART_API_URL, {
-                    query: constants_1.CLICK_AND_COLLECT_API_QUERY,
-                    operationName: "getProductAvailability",
-                    variables: generateClickAndCollectVariables(locationToSearch.postcode, productSKU),
-                }, {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-                const clickAndCollectLocations = clickAndCollectResponse.data.data
-                    .getProductAvailability.availability.CLICK_AND_COLLECT[0]
-                    .locations;
-                const locationIdsFound = clickAndCollectLocations.map((location) => location.location.locationId);
-                locationsToSearchClickAndCollect =
-                    locationsToSearchClickAndCollect.filter((location) => !locationIdsFound.includes(location.locationId) &&
-                        location.locationId !== locationToSearch.locationId);
-                clickAndCollectSearchResults =
-                    addNewResultsToClickAndCollectSearchResults(clickAndCollectSearchResults, clickAndCollectLocations, locationsWithinRadius);
-            }
-            catch (error) {
-                console.error("Error getting product availability", error);
-                throw new Error("Failed to fetch data");
-            }
-        }
         while (locationsToSearchInStore.length > 0) {
             try {
                 const locationToSearch = locationsToSearchInStore[0];
@@ -196,7 +166,34 @@ function getProductAvailability(productSKU, postcode, lat, lon, searchRadius) {
                 throw new Error(axiosError.message);
             }
         }
-        console.log("search complete");
+        while (locationsToSearchClickAndCollect.length > 0) {
+            try {
+                const locationToSearch = locationsToSearchClickAndCollect[0];
+                console.log("searching c&c for store %s: %s, %s", locationToSearch.locationId, locationToSearch.publicName, locationToSearch.postcode);
+                const clickAndCollectResponse = yield axios_1.default.post(constants_1.KMART_API_URL, {
+                    query: constants_1.CLICK_AND_COLLECT_API_QUERY,
+                    operationName: "getProductAvailability",
+                    variables: generateClickAndCollectVariables(locationToSearch.postcode, productSKU),
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                const clickAndCollectLocations = clickAndCollectResponse.data.data
+                    .getProductAvailability.availability.CLICK_AND_COLLECT[0]
+                    .locations;
+                const locationIdsFound = clickAndCollectLocations.map((location) => location.location.locationId);
+                locationsToSearchClickAndCollect =
+                    locationsToSearchClickAndCollect.filter((location) => !locationIdsFound.includes(location.locationId) &&
+                        location.locationId !== locationToSearch.locationId);
+                clickAndCollectSearchResults =
+                    addNewResultsToClickAndCollectSearchResults(clickAndCollectSearchResults, clickAndCollectLocations, locationsWithinRadius);
+            }
+            catch (error) {
+                console.error("Error getting product availability", error);
+                throw new Error("Failed to fetch data");
+            }
+        }
         const fullClickAndCollectLocations = yield getFullLocationsFromCnCResponseLocations(clickAndCollectSearchResults);
         const transformedResponse = {
             clickAndCollect: fullClickAndCollectLocations,

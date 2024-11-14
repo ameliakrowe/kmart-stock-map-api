@@ -107,58 +107,55 @@ function generateInStoreVariables(
   };
 }
 
+function addNewResultsToClickAndCollectSearchResults(
+  oldResults: ClickAndCollectResponseLocation[],
+  newResults: ClickAndCollectResponseLocation[],
+  locationsToInclude: NearestLocation[]
+): ClickAndCollectResponseLocation[] {
+  newResults.forEach((newResult) => {
+    const existingMatchingLocations = oldResults.filter(
+      (existingResult) =>
+        newResult.location.locationId === existingResult.location.locationId
+    );
+    if (
+      existingMatchingLocations.length < 1 &&
+      locationsToInclude
+        .map((location) => location.locationId)
+        .includes(newResult.location.locationId)
+    ) {
+      oldResults.push(newResult);
+    }
+  });
+  return oldResults;
+}
+
+function addNewResultsToInStoreSearchResults(
+  oldResults: InStoreResponseLocation[],
+  newResults: InStoreResponseLocation[],
+  locationsToInclude: NearestLocation[]
+): InStoreResponseLocation[] {
+  newResults.forEach((newResult) => {
+    const existingMatchingLocations = oldResults.filter(
+      (existingResult) => newResult.locationId === existingResult.locationId
+    );
+    if (
+      existingMatchingLocations.length < 1 &&
+      locationsToInclude
+        .map((location) => location.locationId)
+        .includes(newResult.locationId.toString())
+    ) {
+      oldResults.push(newResult);
+    }
+  });
+  return oldResults;
+}
+
 export async function getProductAvailability(
   productSKU: string,
-  postcode: string,
   lat: string,
   lon: string,
   searchRadius: number
 ) {
-  function addNewResultsToClickAndCollectSearchResults(
-    oldResults: ClickAndCollectResponseLocation[],
-    newResults: ClickAndCollectResponseLocation[],
-    locationsToInclude: NearestLocation[]
-  ): ClickAndCollectResponseLocation[] {
-    newResults.forEach((newResult) => {
-      const existingMatchingLocations = oldResults.filter(
-        (existingResult) =>
-          newResult.location.locationId === existingResult.location.locationId
-      );
-      if (
-        existingMatchingLocations.length < 1 &&
-        locationsToInclude
-          .map((location) => location.locationId)
-          .includes(newResult.location.locationId)
-      ) {
-        oldResults.push(newResult);
-      }
-    });
-    return oldResults;
-  }
-
-  function addNewResultsToInStoreSearchResults(
-    oldResults: InStoreResponseLocation[],
-    newResults: InStoreResponseLocation[],
-    locationsToInclude: NearestLocation[]
-  ): InStoreResponseLocation[] {
-    newResults.forEach((newResult) => {
-      const existingMatchingLocations = oldResults.filter(
-        (existingResult) => newResult.locationId === existingResult.locationId
-      );
-      if (
-        existingMatchingLocations.length < 1 &&
-        locationsToInclude
-          .map((location) => location.locationId)
-          .includes(newResult.locationId.toString())
-      ) {
-        oldResults.push(newResult);
-      }
-    });
-    return oldResults;
-  }
-
-  console.log("start");
-
   const locationsWithinRadius = getLocationsWithinRadius(
     lat,
     lon,
@@ -183,58 +180,6 @@ export async function getProductAvailability(
   let clickAndCollectSearchResults: ClickAndCollectResponseLocation[] = [];
 
   let inStoreSearchResults: InStoreResponseLocation[] = [];
-
-  console.log(locationsToSearchClickAndCollect);
-
-  while (locationsToSearchClickAndCollect.length > 0) {
-    try {
-      const locationToSearch = locationsToSearchClickAndCollect[0];
-      console.log(
-        "searching c&c for store %s: %s, %s",
-        locationToSearch.locationId,
-        locationToSearch.publicName,
-        locationToSearch.postcode
-      );
-      const clickAndCollectResponse = await axios.post(
-        KMART_API_URL,
-        {
-          query: CLICK_AND_COLLECT_API_QUERY,
-          operationName: "getProductAvailability",
-          variables: generateClickAndCollectVariables(
-            locationToSearch.postcode,
-            productSKU
-          ),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const clickAndCollectLocations = clickAndCollectResponse.data.data
-        .getProductAvailability.availability.CLICK_AND_COLLECT[0]
-        .locations as ClickAndCollectResponseLocation[];
-      const locationIdsFound = clickAndCollectLocations.map(
-        (location) => location.location.locationId
-      );
-      locationsToSearchClickAndCollect =
-        locationsToSearchClickAndCollect.filter(
-          (location) =>
-            !locationIdsFound.includes(location.locationId) &&
-            location.locationId !== locationToSearch.locationId
-        );
-      clickAndCollectSearchResults =
-        addNewResultsToClickAndCollectSearchResults(
-          clickAndCollectSearchResults,
-          clickAndCollectLocations,
-          locationsWithinRadius
-        );
-    } catch (error) {
-      console.error("Error getting product availability", error);
-      throw new Error("Failed to fetch data");
-    }
-  }
 
   while (locationsToSearchInStore.length > 0) {
     try {
@@ -290,7 +235,55 @@ export async function getProductAvailability(
     }
   }
 
-  console.log("search complete");
+  while (locationsToSearchClickAndCollect.length > 0) {
+    try {
+      const locationToSearch = locationsToSearchClickAndCollect[0];
+      console.log(
+        "searching c&c for store %s: %s, %s",
+        locationToSearch.locationId,
+        locationToSearch.publicName,
+        locationToSearch.postcode
+      );
+      const clickAndCollectResponse = await axios.post(
+        KMART_API_URL,
+        {
+          query: CLICK_AND_COLLECT_API_QUERY,
+          operationName: "getProductAvailability",
+          variables: generateClickAndCollectVariables(
+            locationToSearch.postcode,
+            productSKU
+          ),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const clickAndCollectLocations = clickAndCollectResponse.data.data
+        .getProductAvailability.availability.CLICK_AND_COLLECT[0]
+        .locations as ClickAndCollectResponseLocation[];
+      const locationIdsFound = clickAndCollectLocations.map(
+        (location) => location.location.locationId
+      );
+      locationsToSearchClickAndCollect =
+        locationsToSearchClickAndCollect.filter(
+          (location) =>
+            !locationIdsFound.includes(location.locationId) &&
+            location.locationId !== locationToSearch.locationId
+        );
+      clickAndCollectSearchResults =
+        addNewResultsToClickAndCollectSearchResults(
+          clickAndCollectSearchResults,
+          clickAndCollectLocations,
+          locationsWithinRadius
+        );
+    } catch (error) {
+      console.error("Error getting product availability", error);
+      throw new Error("Failed to fetch data");
+    }
+  }
 
   const fullClickAndCollectLocations =
     await getFullLocationsFromCnCResponseLocations(

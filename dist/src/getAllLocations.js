@@ -21,12 +21,14 @@ function binarySearchFromCoords(coord) {
         let max = 1000;
         let counter = 0;
         let result = [];
+        let lastSearchFailed = false;
         while (max - min > 10) {
             const guess = Math.floor((max - min) / 2 + min);
             try {
                 const nearestLocationsResponse = yield (0, getNearestLocations_1.getNearestLocations)(coord.lat.toString(), coord.lon.toString(), guess.toString());
                 counter += 1;
                 const nearestLocations = nearestLocationsResponse.nearestLocations;
+                lastSearchFailed = false;
                 if (nearestLocationsResponse.nearestLocations.length < 10) {
                     result = nearestLocations;
                     min = guess;
@@ -36,8 +38,14 @@ function binarySearchFromCoords(coord) {
                 }
             }
             catch (_a) {
-                console.log("Probable rate limit hit on Kmart API. Trying again in 10 seconds");
-                yield delay(10000);
+                if (!lastSearchFailed) {
+                    console.error("Probable rate limit hit on Kmart API. Trying again in 10 seconds");
+                    lastSearchFailed = true;
+                    yield delay(10000);
+                }
+                else {
+                    throw new Error(`Unexpected error fetching locations from Kmart API for lat ${Math.round(coord.lat * 10) / 10} lon ${Math.round(coord.lon * 10) / 10}`);
+                }
             }
         }
         return {
@@ -89,22 +97,27 @@ function getAllLocations() {
                 currentSearchCoord.lat -= 0.1;
             }
         }
-        console.log("&d locations left to search", getNumberOfLocationsToSearch(searchCoords));
+        console.log("%d locations left to search", getNumberOfLocationsToSearch(searchCoords));
         while (getNumberOfLocationsToSearch(searchCoords) > 0) {
             const coordToSearch = searchCoords.filter((coord) => coord.needToSearch)[0];
             console.log("Searching for lat: %d lon: %d", Math.round(coordToSearch.coord.lat * 10) / 10, Math.round(coordToSearch.coord.lon * 10) / 10);
-            const result = yield binarySearchFromCoords(coordToSearch.coord);
-            console.log("%d locations found", result.locations.length);
-            console.log("excluding %d radius", result.radiusToExcludeFromSearch - 9);
-            searchCoords = excludeCoordsToSearch(searchCoords, coordToSearch.coord, result.radiusToExcludeFromSearch);
-            console.log(getNumberOfLocationsToSearch(searchCoords));
-            counter += result.numberOfCallsMade;
-            result.locations.forEach((newLocation) => {
-                const matchingLocations = locations.filter((existingLocation) => existingLocation.locationId === newLocation.locationId);
-                if (matchingLocations.length === 0) {
-                    locations.push(newLocation);
-                }
-            });
+            try {
+                const result = yield binarySearchFromCoords(coordToSearch.coord);
+                console.log("%d locations found", result.locations.length);
+                console.log("excluding %d radius", result.radiusToExcludeFromSearch - 9);
+                searchCoords = excludeCoordsToSearch(searchCoords, coordToSearch.coord, result.radiusToExcludeFromSearch);
+                console.log(getNumberOfLocationsToSearch(searchCoords));
+                counter += result.numberOfCallsMade;
+                result.locations.forEach((newLocation) => {
+                    const matchingLocations = locations.filter((existingLocation) => existingLocation.locationId === newLocation.locationId);
+                    if (matchingLocations.length === 0) {
+                        locations.push(newLocation);
+                    }
+                });
+            }
+            catch (err) {
+                throw new Error("Could not fetch locations");
+            }
         }
         const finalResult = {
             locations: locations,

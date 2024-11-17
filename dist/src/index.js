@@ -96,8 +96,19 @@ app.get("/api/getAllLocations", (req, res) => __awaiter(void 0, void 0, void 0, 
         });
     }
 }));
-app.get("/api/getPostcodeSuggestions", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/api/getPostcodeSuggestions", [
+    (0, express_validator_1.query)("query")
+        .trim()
+        .escape()
+        .notEmpty()
+        .withMessage("Search query is required."),
+], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const query = req.query.query;
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json({ errors: errors.array() });
+        return;
+    }
     try {
         const result = yield (0, getPostcodeSuggestions_1.getPostcodeSuggestions)(query);
         res.status(200).json(result);

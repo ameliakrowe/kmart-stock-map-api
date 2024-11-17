@@ -97,19 +97,35 @@ app.get("/api/getAllLocations", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/api/getPostcodeSuggestions", async (req: Request, res: Response) => {
-  const query = req.query.query as string;
+app.get(
+  "/api/getPostcodeSuggestions",
+  [
+    query("query")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Search query is required."),
+  ],
+  async (req: Request, res: Response) => {
+    const query = req.query.query as string;
 
-  try {
-    const result = await getPostcodeSuggestions(query);
-    res.status(200).json(result);
-  } catch (error) {
-    const axiosError = error as AxiosError;
-    res.status(500).json({
-      message: axiosError.message,
-    });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+
+    try {
+      const result = await getPostcodeSuggestions(query);
+      res.status(200).json(result);
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      res.status(500).json({
+        message: axiosError.message,
+      });
+    }
   }
-});
+);
 
 module.exports = app;
 app.listen(port, () => {

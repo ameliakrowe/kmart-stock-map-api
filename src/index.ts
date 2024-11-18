@@ -127,7 +127,7 @@ app.get(
   }
 );
 
-module.exports = app;
+export default app;
 app.listen(port, () => {
   return console.log(`Server is listening on ${port}`);
 });

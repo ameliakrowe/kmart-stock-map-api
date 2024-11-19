@@ -4,6 +4,7 @@ import { NearestLocation } from "./types/NearestLocation";
 import { SearchCoord } from "./types/SearchCoord";
 import { BinarySearchResult } from "./types/BinarySearchResult";
 import { getDistance } from "geolib";
+import { COORD_LIMITS } from "./constants";
 
 function delay(time: number) {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -89,22 +90,15 @@ export async function getAllLocations() {
   let counter = 0;
   const startTime = Date.now();
 
-  const coordLimits = {
-    north: -10,
-    south: -44,
-    west: 112,
-    east: 154,
-  };
-
   let searchCoords: SearchCoord[] = [];
   const locations: NearestLocation[] = [];
 
   const currentSearchCoord = {
-    lat: coordLimits.north,
-    lon: coordLimits.west,
+    lat: COORD_LIMITS.north,
+    lon: COORD_LIMITS.west,
   };
 
-  while (currentSearchCoord.lat >= coordLimits.south) {
+  while (currentSearchCoord.lat >= COORD_LIMITS.south) {
     searchCoords.push({
       coord: {
         lat: currentSearchCoord.lat,
@@ -113,8 +107,8 @@ export async function getAllLocations() {
       needToSearch: true,
     });
     currentSearchCoord.lon += 0.1;
-    if (currentSearchCoord.lon > coordLimits.east) {
-      currentSearchCoord.lon = coordLimits.west;
+    if (currentSearchCoord.lon > COORD_LIMITS.east) {
+      currentSearchCoord.lon = COORD_LIMITS.west;
       currentSearchCoord.lat -= 0.1;
     }
   }

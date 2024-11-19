@@ -49,3 +49,10 @@ export const POSTCODE_SUGGESTIONS_API_QUERY = `
             }
         }
     `;
+
+export const COORD_LIMITS = {
+  north: -10,
+  south: -44,
+  west: 112,
+  east: 154,
+};

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllLocations = getAllLocations;
 const getNearestLocations_1 = require("./getNearestLocations");
 const geolib_1 = require("geolib");
+const constants_1 = require("./constants");
 function delay(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
@@ -72,19 +73,13 @@ function getAllLocations() {
     return __awaiter(this, void 0, void 0, function* () {
         let counter = 0;
         const startTime = Date.now();
-        const coordLimits = {
-            north: -10,
-            south: -44,
-            west: 112,
-            east: 154,
-        };
         let searchCoords = [];
         const locations = [];
         const currentSearchCoord = {
-            lat: coordLimits.north,
-            lon: coordLimits.west,
+            lat: constants_1.COORD_LIMITS.north,
+            lon: constants_1.COORD_LIMITS.west,
         };
-        while (currentSearchCoord.lat >= coordLimits.south) {
+        while (currentSearchCoord.lat >= constants_1.COORD_LIMITS.south) {
             searchCoords.push({
                 coord: {
                     lat: currentSearchCoord.lat,
@@ -93,8 +88,8 @@ function getAllLocations() {
                 needToSearch: true,
             });
             currentSearchCoord.lon += 0.1;
-            if (currentSearchCoord.lon > coordLimits.east) {
-                currentSearchCoord.lon = coordLimits.west;
+            if (currentSearchCoord.lon > constants_1.COORD_LIMITS.east) {
+                currentSearchCoord.lon = constants_1.COORD_LIMITS.west;
                 currentSearchCoord.lat -= 0.1;
             }
         }

@@ -4,6 +4,7 @@ import axios from "axios";
 import {
   mockDataResponse,
   mockEmptyDataResponse,
+  mockErrorResponse,
 } from "../mocks/getPostcodeSuggestionsResponses";
 
 jest.mock("axios");
@@ -42,6 +43,17 @@ describe("GET /api/getPostcodeSuggestions", () => {
           location: "query",
         },
       ],
+    });
+  });
+  it("should return 500 error if Kmart API call fails", async () => {
+    (axios.post as jest.Mock).mockRejectedValue(mockErrorResponse);
+
+    const res = await request(app)
+      .get("/api/getPostcodeSuggestions")
+      .query({ query: "ash" });
+    expect(res.status).toBe(500);
+    expect(res.body).toEqual({
+      message: "Something went wrong getting suggestions. Please try again.",
     });
   });
 });

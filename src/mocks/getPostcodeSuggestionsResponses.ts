@@ -102,3 +102,21 @@ export const mockEmptyDataResponse = {
     postcodeQuery: [] as PostcodeSuggestion[],
   },
 };
+
+export const mockErrorResponse = {
+  errors: [
+    {
+      message:
+        'Cannot query field "states" on type "PostcodeSuggestion". Did you mean "state"?',
+      locations: [
+        {
+          line: 5,
+          column: 17,
+        },
+      ],
+      extensions: {
+        code: "GRAPHQL_VALIDATION_FAILED",
+      },
+    },
+  ],
+};

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.excludeSearchCoordsWithinRadius = excludeSearchCoordsWithinRadius;
 exports.getNumberOfLocationsToSearch = getNumberOfLocationsToSearch;
 exports.getAllLocations = getAllLocations;
 const getNearestLocations_1 = require("./getNearestLocations");

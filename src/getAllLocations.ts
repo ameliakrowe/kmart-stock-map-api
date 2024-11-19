@@ -61,7 +61,7 @@ async function binarySearchFromCoords(
   };
 }
 
-function excludeSearchCoordsWithinRadius(
+export function excludeSearchCoordsWithinRadius(
   coords: SearchCoord[],
   centerCoord: Coord,
   radius: number

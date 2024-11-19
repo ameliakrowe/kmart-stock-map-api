@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getNumberOfLocationsToSearch = getNumberOfLocationsToSearch;
 exports.getAllLocations = getAllLocations;
 const getNearestLocations_1 = require("./getNearestLocations");
 const geolib_1 = require("geolib");
@@ -50,15 +51,15 @@ function binarySearchFromCoords(coord) {
         }
         return {
             locations: result,
-            radiusToExcludeFromSearch: min < 9 ? 9 : min,
+            radiusToExcludeFromSearch: min < 9 ? 0 : min - 9,
             numberOfCallsMade: counter,
         };
     });
 }
-function excludeCoordsToSearch(coords, centerCoord, radius) {
+function excludeSearchCoordsWithinRadius(coords, centerCoord, radius) {
     coords.forEach((coord) => {
         const kmFromCenter = (0, geolib_1.getDistance)({ latitude: centerCoord.lat, longitude: centerCoord.lon }, { latitude: coord.coord.lat, longitude: coord.coord.lon }) / 1000;
-        if (kmFromCenter <= radius - 9) {
+        if (kmFromCenter <= radius) {
             coord.needToSearch = false;
         }
     });
@@ -98,8 +99,8 @@ function getAllLocations() {
             try {
                 const result = yield binarySearchFromCoords(coordToSearch.coord);
                 console.log("%d locations found", result.locations.length);
-                console.log("excluding %d radius", result.radiusToExcludeFromSearch - 9);
-                searchCoords = excludeCoordsToSearch(searchCoords, coordToSearch.coord, result.radiusToExcludeFromSearch);
+                console.log("excluding %d radius", result.radiusToExcludeFromSearch);
+                searchCoords = excludeSearchCoordsWithinRadius(searchCoords, coordToSearch.coord, result.radiusToExcludeFromSearch);
                 console.log(getNumberOfLocationsToSearch(searchCoords));
                 counter += result.numberOfCallsMade;
                 result.locations.forEach((newLocation) => {

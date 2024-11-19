@@ -56,12 +56,12 @@ async function binarySearchFromCoords(
   }
   return {
     locations: result,
-    radiusToExcludeFromSearch: min < 9 ? 9 : min,
+    radiusToExcludeFromSearch: min < 9 ? 0 : min - 9,
     numberOfCallsMade: counter,
   };
 }
 
-function excludeCoordsToSearch(
+function excludeSearchCoordsWithinRadius(
   coords: SearchCoord[],
   centerCoord: Coord,
   radius: number
@@ -72,14 +72,14 @@ function excludeCoordsToSearch(
         { latitude: centerCoord.lat, longitude: centerCoord.lon },
         { latitude: coord.coord.lat, longitude: coord.coord.lon }
       ) / 1000;
-    if (kmFromCenter <= radius - 9) {
+    if (kmFromCenter <= radius) {
       coord.needToSearch = false;
     }
   });
   return coords;
 }
 
-function getNumberOfLocationsToSearch(coords: SearchCoord[]): number {
+export function getNumberOfLocationsToSearch(coords: SearchCoord[]): number {
   return coords.filter((coord) => coord.needToSearch).length;
 }
 
@@ -126,9 +126,9 @@ export async function getAllLocations() {
     try {
       const result = await binarySearchFromCoords(coordToSearch.coord);
       console.log("%d locations found", result.locations.length);
-      console.log("excluding %d radius", result.radiusToExcludeFromSearch - 9);
+      console.log("excluding %d radius", result.radiusToExcludeFromSearch);
 
-      searchCoords = excludeCoordsToSearch(
+      searchCoords = excludeSearchCoordsWithinRadius(
         searchCoords,
         coordToSearch.coord,
         result.radiusToExcludeFromSearch

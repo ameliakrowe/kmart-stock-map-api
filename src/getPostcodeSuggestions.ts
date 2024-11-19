@@ -1,21 +1,7 @@
 import axios from "axios";
-import { KMART_API_URL } from "./constants";
+import { KMART_API_URL, POSTCODE_SUGGESTIONS_API_QUERY } from "./constants";
 
 export async function getPostcodeSuggestions(queryString: string) {
-  const apiQuery = `
-        query getPostcodeSuggestions($input: PostcodeQueryInput!) {
-            postcodeQuery(input: $input) {
-                postcode
-                suburb
-                state
-                location {
-                    lat
-                    lon
-                }
-            }
-        }
-    `;
-
   const variables = {
     input: {
       country: "AU",
@@ -27,7 +13,7 @@ export async function getPostcodeSuggestions(queryString: string) {
     const response = await axios.post(
       KMART_API_URL,
       {
-        query: apiQuery,
+        query: POSTCODE_SUGGESTIONS_API_QUERY,
         operationName: "getPostcodeSuggestions",
         variables,
       },

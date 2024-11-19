@@ -35,3 +35,17 @@ export const IN_STORE_API_QUERY = `
         }
     }
 `;
+
+export const POSTCODE_SUGGESTIONS_API_QUERY = `
+        query getPostcodeSuggestions($input: PostcodeQueryInput!) {
+            postcodeQuery(input: $input) {
+                postcode
+                suburb
+                state
+                location {
+                    lat
+                    lon
+                }
+            }
+        }
+    `;

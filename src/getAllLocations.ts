@@ -4,11 +4,8 @@ import { NearestLocation } from "./types/NearestLocation";
 import { SearchCoord } from "./types/SearchCoord";
 import { BinarySearchResult } from "./types/BinarySearchResult";
 import { getDistance } from "geolib";
-import { COORD_LIMITS } from "./constants";
-
-function delay(time: number) {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
+import { COORD_LIMITS } from "./utils/constants";
+import { delay } from "./utils/utils";
 
 async function binarySearchFromCoords(
   coord: Coord

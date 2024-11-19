@@ -12,10 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllLocations = getAllLocations;
 const getNearestLocations_1 = require("./getNearestLocations");
 const geolib_1 = require("geolib");
-const constants_1 = require("./constants");
-function delay(time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
+const constants_1 = require("./utils/constants");
+const utils_1 = require("./utils/utils");
 function binarySearchFromCoords(coord) {
     return __awaiter(this, void 0, void 0, function* () {
         let min = 0;
@@ -42,7 +40,7 @@ function binarySearchFromCoords(coord) {
                 if (!lastSearchFailed) {
                     console.error("Probable rate limit hit on Kmart API. Trying again in 10 seconds");
                     lastSearchFailed = true;
-                    yield delay(10000);
+                    yield (0, utils_1.delay)(10000);
                 }
                 else {
                     console.error(`Unexpected error fetching locations from Kmart API for lat ${Math.round(coord.lat * 10) / 10} lon ${Math.round(coord.lon * 10) / 10} at search distance ${guess}: ${err.message}`);

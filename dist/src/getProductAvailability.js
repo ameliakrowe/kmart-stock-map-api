@@ -39,7 +39,7 @@ exports.getProductAvailability = getProductAvailability;
 const axios_1 = __importDefault(require("axios"));
 const geolib_1 = require("geolib");
 const locationData = __importStar(require("../locations.json"));
-const constants_1 = require("./constants");
+const constants_1 = require("./utils/constants");
 const allLocations = locationData.locations;
 function getFullLocationsFromCnCResponseLocations(locations) {
     const result = [];

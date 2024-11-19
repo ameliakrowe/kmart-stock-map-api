@@ -11,7 +11,7 @@ import {
   CLICK_AND_COLLECT_API_QUERY,
   IN_STORE_API_QUERY,
   KMART_API_URL,
-} from "./constants";
+} from "./utils/constants";
 import { InStoreVariables } from "./types/InStoreVariables";
 import { AxiosError } from "axios";
 

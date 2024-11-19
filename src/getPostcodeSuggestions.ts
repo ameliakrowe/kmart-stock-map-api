@@ -1,5 +1,8 @@
 import axios from "axios";
-import { KMART_API_URL, POSTCODE_SUGGESTIONS_API_QUERY } from "./constants";
+import {
+  KMART_API_URL,
+  POSTCODE_SUGGESTIONS_API_QUERY,
+} from "./utils/constants";
 
 export async function getPostcodeSuggestions(queryString: string) {
   const variables = {

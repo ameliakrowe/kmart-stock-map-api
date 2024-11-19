@@ -1,5 +1,5 @@
 import axios from "axios";
-import { KMART_API_URL } from "./constants";
+import { KMART_API_URL } from "./utils/constants";
 
 export async function getNearestLocations(
   lat: string,

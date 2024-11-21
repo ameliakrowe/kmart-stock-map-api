@@ -36,6 +36,17 @@ export const IN_STORE_API_QUERY = `
     }
 `;
 
+export const NEAREST_LOCATIONS_API_QUERY = `
+        query getNearestLocations($lat: String!, $lon: String!, $distance: String!) {
+            nearestLocations(input: {lat: $lat, lon: $lon, distance: $distance}) {
+                locationId
+                publicName
+                latitude
+                longitude
+                postcode
+            }
+        }
+    `;
 export const POSTCODE_SUGGESTIONS_API_QUERY = `
         query getPostcodeSuggestions($input: PostcodeQueryInput!) {
             postcodeQuery(input: $input) {

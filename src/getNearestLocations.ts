@@ -1,23 +1,11 @@
 import axios from "axios";
-import { KMART_API_URL } from "./utils/constants";
+import { KMART_API_URL, NEAREST_LOCATIONS_API_QUERY } from "./utils/constants";
 
 export async function getNearestLocations(
   lat: string,
   lon: string,
   distance: string
 ) {
-  const apiQuery = `
-        query getNearestLocations($lat: String!, $lon: String!, $distance: String!) {
-            nearestLocations(input: {lat: $lat, lon: $lon, distance: $distance}) {
-                locationId
-                publicName
-                latitude
-                longitude
-                postcode
-            }
-        }
-    `;
-
   const variables = {
     lat,
     lon,
@@ -28,7 +16,7 @@ export async function getNearestLocations(
     const response = await axios.post(
       KMART_API_URL,
       {
-        query: apiQuery,
+        query: NEAREST_LOCATIONS_API_QUERY,
         operationName: "getNearestLocations",
         variables,
       },

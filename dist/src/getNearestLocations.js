@@ -17,17 +17,6 @@ const axios_1 = __importDefault(require("axios"));
 const constants_1 = require("./utils/constants");
 function getNearestLocations(lat, lon, distance) {
     return __awaiter(this, void 0, void 0, function* () {
-        const apiQuery = `
-        query getNearestLocations($lat: String!, $lon: String!, $distance: String!) {
-            nearestLocations(input: {lat: $lat, lon: $lon, distance: $distance}) {
-                locationId
-                publicName
-                latitude
-                longitude
-                postcode
-            }
-        }
-    `;
         const variables = {
             lat,
             lon,
@@ -35,7 +24,7 @@ function getNearestLocations(lat, lon, distance) {
         };
         try {
             const response = yield axios_1.default.post(constants_1.KMART_API_URL, {
-                query: apiQuery,
+                query: constants_1.NEAREST_LOCATIONS_API_QUERY,
                 operationName: "getNearestLocations",
                 variables,
             }, {

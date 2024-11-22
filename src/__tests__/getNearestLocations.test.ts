@@ -13,13 +13,13 @@ describe("getNearestLocations", () => {
     (axios.post as jest.Mock).mockResolvedValue(mockDataResponse);
 
     const result = await getNearestLocations(-33, 151, 60);
-    expect(result).toEqual(mockDataResponse.data.data);
+    expect(result).toEqual(mockDataResponse.data.data.nearestLocations);
   });
   it("should return empty list if no locations are found in radius", async () => {
     (axios.post as jest.Mock).mockResolvedValue(mockEmptyDataResponse);
 
     const result = await getNearestLocations(-33, 151, 10);
-    expect(result).toEqual({ nearestLocations: [] });
+    expect(result).toEqual([]);
   });
   it("should throw error if API call fails", async () => {
     (axios.post as jest.Mock).mockRejectedValue(mockErrorResponse);

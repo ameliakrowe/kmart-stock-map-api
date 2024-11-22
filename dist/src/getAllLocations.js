@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.binarySearchStoreLocations = binarySearchStoreLocations;
 exports.excludeSearchCoordsWithinRadius = excludeSearchCoordsWithinRadius;
 exports.getNumberOfLocationsToSearch = getNumberOfLocationsToSearch;
 exports.getAllLocations = getAllLocations;
@@ -26,11 +27,10 @@ function binarySearchStoreLocations(coord) {
         while (max - min > 10) {
             const guess = Math.floor((max - min) / 2 + min);
             try {
-                const nearestLocationsResponse = yield (0, getNearestLocations_1.getNearestLocations)(coord.lat, coord.lon, guess);
+                const nearestLocations = yield (0, getNearestLocations_1.getNearestLocations)(coord.lat, coord.lon, guess);
                 counter += 1;
-                const nearestLocations = nearestLocationsResponse.nearestLocations;
                 lastSearchFailed = false;
-                if (nearestLocationsResponse.nearestLocations.length < 10) {
+                if (nearestLocations.length < 10) {
                     result = nearestLocations;
                     min = guess;
                 }

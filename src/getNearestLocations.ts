@@ -1,11 +1,12 @@
 import axios from "axios";
 import { KMART_API_URL, NEAREST_LOCATIONS_API_QUERY } from "./utils/constants";
+import { NearestLocation } from "NearestLocation";
 
 export async function getNearestLocations(
   lat: number,
   lon: number,
   distance: number
-) {
+): Promise<NearestLocation[]> {
   const variables = {
     lat: lat.toString(),
     lon: lon.toString(),
@@ -27,10 +28,8 @@ export async function getNearestLocations(
       }
     );
     return response.data.data.nearestLocations
-      ? response.data.data
-      : {
-          nearestLocations: [],
-        };
+      ? response.data.data.nearestLocations
+      : [];
   } catch (err) {
     throw err;
   }

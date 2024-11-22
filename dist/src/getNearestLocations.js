@@ -33,10 +33,8 @@ function getNearestLocations(lat, lon, distance) {
                 },
             });
             return response.data.data.nearestLocations
-                ? response.data.data
-                : {
-                    nearestLocations: [],
-                };
+                ? response.data.data.nearestLocations
+                : [];
         }
         catch (err) {
             throw err;

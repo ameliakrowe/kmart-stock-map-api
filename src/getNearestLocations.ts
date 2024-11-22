@@ -2,14 +2,14 @@ import axios from "axios";
 import { KMART_API_URL, NEAREST_LOCATIONS_API_QUERY } from "./utils/constants";
 
 export async function getNearestLocations(
-  lat: string,
-  lon: string,
-  distance: string
+  lat: number,
+  lon: number,
+  distance: number
 ) {
   const variables = {
-    lat,
-    lon,
-    distance: distance + "km",
+    lat: lat.toString(),
+    lon: lon.toString(),
+    distance: distance.toString() + "km",
   };
 
   try {

@@ -18,9 +18,9 @@ const constants_1 = require("./utils/constants");
 function getNearestLocations(lat, lon, distance) {
     return __awaiter(this, void 0, void 0, function* () {
         const variables = {
-            lat,
-            lon,
-            distance: distance + "km",
+            lat: lat.toString(),
+            lon: lon.toString(),
+            distance: distance.toString() + "km",
         };
         try {
             const response = yield axios_1.default.post(constants_1.KMART_API_URL, {

@@ -7,7 +7,7 @@ import { getDistance } from "geolib";
 import { COORD_LIMITS } from "./utils/constants";
 import { delay } from "./utils/utils";
 
-async function binarySearchFromCoords(
+async function binarySearchStoreLocations(
   coord: Coord
 ): Promise<BinarySearchResult> {
   let min = 0;
@@ -22,9 +22,9 @@ async function binarySearchFromCoords(
     const guess = Math.floor((max - min) / 2 + min);
     try {
       const nearestLocationsResponse = await getNearestLocations(
-        coord.lat.toString(),
-        coord.lon.toString(),
-        guess.toString()
+        coord.lat,
+        coord.lon,
+        guess
       );
       counter += 1;
       const nearestLocations = nearestLocationsResponse.nearestLocations;
@@ -124,7 +124,7 @@ export async function getAllLocations() {
     );
 
     try {
-      const result = await binarySearchFromCoords(coordToSearch.coord);
+      const result = await binarySearchStoreLocations(coordToSearch.coord);
       console.log("%d locations found", result.locations.length);
       console.log("excluding %d radius", result.radiusToExcludeFromSearch);
 

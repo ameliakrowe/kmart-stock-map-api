@@ -16,7 +16,7 @@ const getNearestLocations_1 = require("./getNearestLocations");
 const geolib_1 = require("geolib");
 const constants_1 = require("./utils/constants");
 const utils_1 = require("./utils/utils");
-function binarySearchFromCoords(coord) {
+function binarySearchStoreLocations(coord) {
     return __awaiter(this, void 0, void 0, function* () {
         let min = 0;
         let max = 1000;
@@ -26,7 +26,7 @@ function binarySearchFromCoords(coord) {
         while (max - min > 10) {
             const guess = Math.floor((max - min) / 2 + min);
             try {
-                const nearestLocationsResponse = yield (0, getNearestLocations_1.getNearestLocations)(coord.lat.toString(), coord.lon.toString(), guess.toString());
+                const nearestLocationsResponse = yield (0, getNearestLocations_1.getNearestLocations)(coord.lat, coord.lon, guess);
                 counter += 1;
                 const nearestLocations = nearestLocationsResponse.nearestLocations;
                 lastSearchFailed = false;
@@ -98,7 +98,7 @@ function getAllLocations() {
             const coordToSearch = searchCoords.filter((coord) => coord.needToSearch)[0];
             console.log("Searching for lat: %d lon: %d", Math.round(coordToSearch.coord.lat * 10) / 10, Math.round(coordToSearch.coord.lon * 10) / 10);
             try {
-                const result = yield binarySearchFromCoords(coordToSearch.coord);
+                const result = yield binarySearchStoreLocations(coordToSearch.coord);
                 console.log("%d locations found", result.locations.length);
                 console.log("excluding %d radius", result.radiusToExcludeFromSearch);
                 searchCoords = excludeSearchCoordsWithinRadius(searchCoords, coordToSearch.coord, result.radiusToExcludeFromSearch);
